@@ -183,3 +183,35 @@ custom_dialog.xml
         android:layout_gravity="center"/>
 </LinearLayout>
 
+
+options_menu.xml
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/option1"
+        android:title="@string/change_to_green"/>
+
+    <item
+        android:id="@+id/option2"
+        android:title="@string/change_to_red"/>
+
+</menu>
+
+
+
+popup_menu.xml
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/btnPopupMenu1"
+        android:title="@string/change_to_white"/>
+
+    <item
+        android:id="@+id/btnPopupMenu2"
+        android:title="@string/change_to_purple"/>
+
+</menu>
