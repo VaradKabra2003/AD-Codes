@@ -1,0 +1,127 @@
+MainActivity.java
+
+package com.example.image_slider_lab7;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
+
+import android.os.Bundle;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+
+    ViewPager2 viewPager2;
+    ImageAdapter imageAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        viewPager2 = findViewById(R.id.imageSlider);
+
+        List<Integer> imageList = new ArrayList<>();
+        imageList.add(R.drawable.img1);
+        imageList.add(R.drawable.img2);
+        imageList.add(R.drawable.img3);
+
+        imageAdapter = new ImageAdapter(imageList);
+        viewPager2.setAdapter(imageAdapter);
+    }
+}
+
+
+ImageAdapter.java
+
+package com.example.image_slider_lab7;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
+public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
+
+    private List<Integer> imageList;
+
+    public ImageAdapter(List<Integer> imageList) {
+        this.imageList = imageList;
+    }
+
+    @NonNull
+    @Override
+    public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.slider_item, parent, false);
+        return new ImageViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
+        holder.imageView.setImageResource(imageList.get(position));
+    }
+
+    @Override
+    public int getItemCount() {
+        return imageList.size();
+    }
+
+    static class ImageViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+        public ImageViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.sliderImageView);
+        }
+    }
+}
+
+
+activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/imageSlider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
+
+
+slider_item.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/sliderImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:contentDescription="Slider Image" />
+
+</FrameLayout>
+
+
+
+gradel dependiences
+
+dependencies {
+implementation(libs.viewpager2)
+}
+
+Add 3 images (e.g., img1.jpg, img2.jpg, img3.jpg) to your res/drawable/ folder.

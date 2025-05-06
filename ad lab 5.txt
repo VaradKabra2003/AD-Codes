@@ -1,0 +1,185 @@
+ActivityMain.java
+
+package com.example.dialogboxandmenu_lab5;
+
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.PopupMenu;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import java.util.Calendar;
+
+public class MainActivity extends AppCompatActivity {
+
+    Button btnAlertDialog, btnCustomDialog, btnDatePicker, btnPopupMenu;
+    TextView contextTextView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        btnAlertDialog = findViewById(R.id.btnAlertDialog);
+        btnCustomDialog = findViewById(R.id.btnCustomDialog);
+        btnDatePicker = findViewById(R.id.btnDatePicker);
+        btnPopupMenu = findViewById(R.id.btnPopupMenu);
+        contextTextView = findViewById(R.id.contextTextView);
+
+        registerForContextMenu(contextTextView);
+
+        btnAlertDialog.setOnClickListener(v -> showAlertDialog());
+        btnCustomDialog.setOnClickListener(v -> showCustomDialog());
+        btnDatePicker.setOnClickListener(v -> showDatePickerDialog());
+        btnPopupMenu.setOnClickListener(v -> showPopupMenu(v));
+    }
+
+    private void showAlertDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Alert")
+                .setMessage("This is an alert dialog.")
+                .setPositiveButton("OK", null)
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void showCustomDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.custom_dialog);
+        Button close = dialog.findViewById(R.id.btnClose);
+        close.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
+    private void showDatePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                (view, year, month, dayOfMonth) -> Toast.makeText(this, "Selected: " + dayOfMonth + "/" + (month+1) + "/" + year, Toast.LENGTH_SHORT).show(),
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
+
+    private void showPopupMenu(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(item -> {
+            Toast.makeText(this, "Selected: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        });
+        popup.show();
+    }
+
+    // Options Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Toast.makeText(this, "Option Selected: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+        return super.onOptionsItemSelected(item);
+    }
+
+    // Context Menu
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getMenuInflater().inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        Toast.makeText(this, "Context Selected: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+        return true;
+    }
+}
+
+
+
+activity_main.xml
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/btnAlertDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Alert Dialog" />
+
+    <Button
+        android:id="@+id/btnCustomDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Custom Dialog" />
+
+    <Button
+        android:id="@+id/btnDatePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Date Picker" />
+
+    <Button
+        android:id="@+id/btnPopupMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Popup Menu" />
+
+    <TextView
+        android:id="@+id/contextTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Long Press Here for Context Menu"
+        android:padding="16dp"
+        android:background="#EEE"
+        android:textSize="18sp"
+        android:gravity="center"/>
+
+</LinearLayout>
+
+
+
+
+custom_dialog.xml
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a custom dialog!" />
+
+    <Button
+        android:id="@+id/btnClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Close"
+        android:layout_gravity="center"/>
+</LinearLayout>
+
