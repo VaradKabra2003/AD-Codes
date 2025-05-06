@@ -121,7 +121,7 @@ slider_item.xml
 gradel dependiences
 
 dependencies {
-implementation(libs.viewpager2)
+implementation("androidx.viewpager2:viewpager2:1.0.0")
 }
 
 Add 3 images (e.g., img1.jpg, img2.jpg, img3.jpg) to your res/drawable/ folder.
