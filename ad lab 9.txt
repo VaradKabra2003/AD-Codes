@@ -1,6 +1,6 @@
 ActivityMain.java
 
-package com.example.externalstorageapp;
+package com.example.myapplication_9;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,8 +12,9 @@ public class MainActivity extends AppCompatActivity {
 
     EditText editTextData;
     TextView textViewData;
-    Button buttonSave, buttonRead;
-    File file;
+    Button buttonSaveExt, buttonReadExt, buttonSaveInt, buttonReadInt;
+    File externalFile;
+    String internalFilename = "internalData.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,47 +23,74 @@ public class MainActivity extends AppCompatActivity {
 
         editTextData = findViewById(R.id.editTextData);
         textViewData = findViewById(R.id.textViewData);
-        buttonSave = findViewById(R.id.buttonSave);
-        buttonRead = findViewById(R.id.buttonRead);
+        buttonSaveExt = findViewById(R.id.buttonSaveExt);
+        buttonReadExt = findViewById(R.id.buttonReadExt);
+        buttonSaveInt = findViewById(R.id.buttonSaveInt);
+        buttonReadInt = findViewById(R.id.buttonReadInt);
 
-        // Get external file reference
-        file = new File(getExternalFilesDir(null), "externalData.txt");
+        externalFile = new File(getExternalFilesDir(null), "externalData.txt");
 
-        // Save Button
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String data = editTextData.getText().toString();
-                try {
-                    FileOutputStream fos = new FileOutputStream(file);
-                    fos.write(data.getBytes());
-                    fos.close();
-                    Toast.makeText(MainActivity.this, "Data Saved", Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(MainActivity.this, "Error Saving Data", Toast.LENGTH_SHORT).show();
-                }
+        // Save to External
+        buttonSaveExt.setOnClickListener(v -> {
+            String data = editTextData.getText().toString();
+            try {
+                FileOutputStream fos = new FileOutputStream(externalFile);
+                fos.write(data.getBytes());
+                fos.close();
+                Toast.makeText(this, "Saved to External Storage", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error Saving to External", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Read Button
-        buttonRead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    FileInputStream fis = new FileInputStream(file);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line).append("\n");
-                    }
-                    reader.close();
-                    textViewData.setText(sb.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(MainActivity.this, "Error Reading Data", Toast.LENGTH_SHORT).show();
+        // Read from External
+        buttonReadExt.setOnClickListener(v -> {
+            try {
+                FileInputStream fis = new FileInputStream(externalFile);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append("\n");
                 }
+                reader.close();
+                textViewData.setText(sb.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error Reading from External", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Save to Internal
+        buttonSaveInt.setOnClickListener(v -> {
+            String data = editTextData.getText().toString();
+            try {
+                FileOutputStream fos = openFileOutput(internalFilename, MODE_PRIVATE);
+                fos.write(data.getBytes());
+                fos.close();
+                Toast.makeText(this, "Saved to Internal Storage", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error Saving to Internal", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Read from Internal
+        buttonReadInt.setOnClickListener(v -> {
+            try {
+                FileInputStream fis = openFileInput(internalFilename);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+                reader.close();
+                textViewData.setText(sb.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error Reading from Internal", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -82,28 +110,43 @@ activity_main.xml
         android:id="@+id/editTextData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter text to save" />
+        android:hint="Enter Data" />
 
     <Button
-        android:id="@+id/buttonSave"
+        android:id="@+id/buttonSaveExt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save to External Storage" />
+        android:text="Save to External" />
 
     <Button
-        android:id="@+id/buttonRead"
+        android:id="@+id/buttonReadExt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Read from External Storage" />
+        android:text="Read from External" />
+
+    <Button
+        android:id="@+id/buttonSaveInt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save to Internal" />
+
+    <Button
+        android:id="@+id/buttonReadInt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Read from Internal" />
 
     <TextView
         android:id="@+id/textViewData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Data will appear here"
-        android:paddingTop="16dp" />
+        android:text="Output will appear here"
+        android:padding="10dp"
+        android:textSize="16sp" />
+
 
 </LinearLayout>
+
 
 
 manifeast.xml
